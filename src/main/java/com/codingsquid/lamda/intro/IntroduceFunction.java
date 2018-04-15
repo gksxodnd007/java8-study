@@ -1,4 +1,4 @@
-package com.codingsquid.lamda;
+package com.codingsquid.lamda.intro;
 
 @FunctionalInterface
 public interface IntroduceFunction {
