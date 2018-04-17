@@ -4,7 +4,7 @@ JAVA 8 STUDY
 Content
 -------
 
--	Lamda
+-	lambda
 -	Stream
 -	Optional<T>
 
@@ -15,14 +15,14 @@ Content
 
 | dir      | info      |
 |:---------|:----------|
-| lamda    | 람다식    |
+| lambda   | 람다식    |
 | optional | 래퍼 클래 |
 | stream   | 스트림    |
 
 람다식이란?
 -----------
 
-람다식(Lamda expression)은 간단히 말해서 메서드를 하나의 '식(expression)'으로 표현한 것이다. 메서드를 람다식으로 표현하면 메서드의 이름과 반환값이 없어지므로, 람다식을 '익명 함수(anonymous function)'이라고도 한다.
+람다식(lambda expression)은 간단히 말해서 메서드를 하나의 '식(expression)'으로 표현한 것이다. 메서드를 람다식으로 표현하면 메서드의 이름과 반환값이 없어지므로, 람다식을 '익명 함수(anonymous function)'이라고도 한다.
 
 ```java
 int[] arr = new int[5];
@@ -135,8 +135,8 @@ public interface Function {
   public abstract int max(int a, int b);
 }
 
-public class Lamda {
-  Function funtionLamda = (int a, int b) -> return a > b ? a : b;
+public class lambda {
+  Function funtionlambda = (int a, int b) -> return a > b ? a : b;
   Function functionAnomyObject = new Function() {
     public int max(int a, int b) {
       return a > b ? a : b;
