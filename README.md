@@ -25,16 +25,16 @@ Content
 람다식(Lamda expression)은 간단히 말해서 메서드를 하나의 '식(expression)'으로 표현한 것이다. 메서드를 람다식으로 표현하면 메서드의 이름과 반환값이 없어지므로, 람다식을 '익명 함수(anonymous function)'이라고도 한다.
 
 ```java
-  int[] arr = new int[5];
-  Arrays.setAll(arr, i -> (int)Math.random() * 5) + 1;
+int[] arr = new int[5];
+Arrays.setAll(arr, i -> (int)Math.random() * 5) + 1;
 ```
 
 위의 람다식은 다음 메서드와 같다.
 
 ```java
-  int method(int i) {
-    return (int)(Math.random() * 5) + 1;
-  }
+int method(int i) {
+  return (int)(Math.random() * 5) + 1;
+}
 ```
 
 위의 메서드는 클래스에 포함되어야 하므로 클래스를 새로 만들어야 하고, 객체도 생성해야만 비로소 필요한 메서드를 호출 할 수 있다. 그러나 람다식은 이 모든 과정없이 오직 람다식 자체만으로도 이 메서드의 역할을 대신할 수 있다. **게다가 람다식은 메서드의 매개변수로 전달되어지는 것이 가능하고, 메서드의 결과로 반환 될 수도 있다.**
@@ -53,7 +53,7 @@ Content
 
 ```java
 (매개변수 선언) -> {
-
+  문장들
 }
 ```
 
