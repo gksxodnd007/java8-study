@@ -108,5 +108,66 @@ int a -> a * a //error
 (int a, int b) -> return a > ? a : b //error
 ```
 
+자바에서 모든 메서드는 클래스 내에 포함되어야 하는데, 람다식은 어떤 클래스에 포함되는 것일까? 람다식은 익명 클래스의 객체와 동등하다.
+
+```java
+(int a, int b) -> a > b ? a : b
+
+//위 람다식은 다음과 같다.
+new Object() {
+  int max(int a, int b) {
+    return a > b ? a : b;
+    }
+}
+```
+
+람다식으로 정의된 메서드를 호출하려면 참조변수에 저장해야한다.
+
+```java
+타입 function = (int a, int b) -> a > b ? a : b;
+```
+
+참조변수 function의 타입은 인터페이스로 정의해야한다. 이때 인터페이스 @FunctionalInterface 애노테이션을 붙인다. 이를 "**함수형 인터페이스**"라고 부른다. 함수형 인터페이스에는 오직 하나의 추상 메서드만 정의되어 있어야한다. 그래야 람다식과 인터페이스의 메서드가 1:1로 연결될 수 있기 때문이다. 반면에 static메서드와 default메서드의 개수에는 제약이 없다.
+
+```java
+@FunctionalInterface
+public interface Function {
+  public abstract int max(int a, int b);
+}
+
+public class Lamda {
+  Function funtionLamda = (int a, int b) -> return a > b ? a : b;
+  Function functionAnomyObject = new Function() {
+    public int max(int a, int b) {
+      return a > b ? a : b;
+    }
+  }
+
+  function.max(3, 5);
+  functionAnomyObject.max(3, 5);
+}
+```
+
+이때 익명객체를 람다식으로 대체가 가능한 이유는, 람다식도 실제로는 익명 객체이고, Function인터페이스를 구현한 익명 객체의 메서드 max()와 람다식의 매개변수의 타입과 개수 그리고 반환값이 일치하기 때문이다.
+
+**람다식을 참조변수로 다룰 수 있다는 것은 메서드를 통해 람다식을 주고받을 수 있다는 것을 의미**한다.
+
+**람다식의 타입과 형변환**
+
+-	함수형 인터페이스로 람다식을 참조할 수 있다는 것일 뿐, 람다식의 타입이 함수형 인터페이스의 타입과 일치하는 것은 아니다. 람다식은 익명 객체이고 익명 객체는 타입이 없다. 정확히는 타입은 있지만 컴파일러가 임의로 이름을 정하기 때문에 알 수 없는 것이다. 그래서 대입 연산자의 양변의 타입을 일치시키기 위해 아래와 같이 형변환이 필요하다.
+
+```java
+Function function = (Function)(() -> {}); //양변의 타입이 다르므로 형변환 필요
+```
+
+-	람다식은 이름이 없을 뿐 분명히 객체인데도, 아래와 같이 Object타입으로 형변환 할 수 없다. 람다식은 오직 함수형 인터페이스로만 형변환이 가능하다.
+
+**외부 변수를 참조하는 람다식**
+
+-	람다식도 익명 객체, 즉 익명 클래스의 인스턴스이므로 람다식에서 외부에 선언된 변수에 접근하는 규칙은 앞서 익명 클래스에서 배운 것과 동일하다.
+-	람다식 내에서 참조하는 지역변수는 final이 붙지 않았어도 상수로 간주된다.
+-	Inner클래스와 Outer클래스의 인스턴스 변수는 상수로 간주되지 않는다.
+-	**외부 지역변수와 같은 이름의 람다식 매개변수는 허용되지 않는다.**
+
 Stream이란?
 -----------
