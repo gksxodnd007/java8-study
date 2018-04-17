@@ -1,7 +1,6 @@
-package com.codingsquid.lamda;
+package com.codingsquid.lambda;
 
-import com.codingsquid.lamda.function_interface.FunctionInterfaceExample;
-import com.codingsquid.lamda.intro.IntroExample;
+import com.codingsquid.lambda.function_interface.FunctionInterfaceExample;
 
 public class Main {
 

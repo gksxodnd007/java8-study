@@ -1,4 +1,4 @@
-package com.codingsquid.lamda.function_interface;
+package com.codingsquid.lambda.function_interface;
 
 import java.util.function.*;
 
@@ -32,7 +32,7 @@ public class FunctionInterfaceExample {
         runnable.run();
 
         Consumer<String> consumer = (text) -> System.out.println(text);
-        consumer.accept("hello Lamda expression");
+        consumer.accept("hello Lambda expression");
 
         Function<String, Integer> f = (string) -> Integer.parseInt(string, 16);
         Function<Integer, String> g = (integer) -> Integer.toBinaryString(integer);

@@ -1,4 +1,4 @@
-package com.codingsquid.lamda.intro;
+package com.codingsquid.lambda.intro;
 
 import java.util.Scanner;
 
