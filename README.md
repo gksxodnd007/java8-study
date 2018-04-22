@@ -236,4 +236,108 @@ int sum = strStream.parallel()
                    .sum();
 ```
 
-### 스트림 생성 & 핵심 메서드
+### 스트림 생성
+
+스트림으로 작업을 하려면, 스트림을 생성해야한다. 스트림의 소스가 될 수 있는 대상은 배열, 컬렉션, 임의의 수, 파일 등 다양하며, 이 다양한 소스들로부터 스트림을 생성하는 방법에 대해서 알아보자.
+
+- **컬렉션**
+  - 컬렉션의 최고 조상인 Collection에 stream()이 정의되어 있다. Collection의 자손인 List와 Set을 구현한 컬렉션 클래스들은 모두 이 메서드로 스트림을 생성할 수 있다.
+  - stream()은 해당 컬렉션을 소스(source)로 하는 스트림을 반환한다.
+    ```java
+    Stream<T> Collection.stream();
+
+    //List로부터 스트림을 생성하는 코드
+    List<String> list = Arrays.asList("a", "b", "c");
+    Stream<String> listStream = list.stream();
+    ```
+  - forEach()는 지정된 작업을 스트림의 모든 요소에 대해 수행한다.
+    ```java
+    //스트림의 모든 요소를 출력
+    listStream.forEach(System.out::print);
+    ```
+- **배열**
+  - 배열을 소스로 하는 스트림을 생성하는 메서드는 다음과 같이 Stream과 Arrays에 static메서드로 정의되어 있다.
+  ```java
+  //Stream의 static 메서드
+  Stream<T> Stream.of(T... values); //가변인자
+  Stream<T> Stream.of(T[]);
+  //Arrays의 static 메서드
+  Stream<T> Arrays.stream(T[]);
+  Stream<T> Arrays.stream(T[] array, int startInclusive, int endExclusive);
+  //문자열 스트림 생성 코드
+  Stream<String> strStream = Stream.of("a", "b", "c"); //가변인자
+  Stream<String> strStream = Stream.of(new String[] {"a", "b", "c"});
+  Stream<String> strStream = Arrays.stream(new String[] {"a", "b", "c"});
+  Stream<String> strStream = Arrays.stream(new String[] {"a", "b", "c"}, 0, 3); //end범위 포함 x
+  ```
+
+### 스트림의 핵심 메서드
+
+스트림의 연산은 중간연산과 최종연산으로 나누어 진다고 하였다. 다양한 연산들이 이 있지만 우리는 map(), flatMap(), reduce(), collect() 네개의 핵심 연산만 알아보자. (다른 연산들은 stream api를 확인하자.)
+
+- **중간연산**
+  - **map():** 스트림의 요소에 저장된 값 중에서 원하는 필드로만 뽑아내거나 특정 형태로 변환해야 할 때 사용된다. 이 메서드의 선언부는 아래와 같으며, 매개변수로 T타입을 R타입으로 변환해서 반환하는 함수를 지정해야한다.
+  ```java
+  Stream<R> map(Function<? super T, ? extends R> mapper);
+  ```
+  예를 들어 File의 스트림에서 파일의 이름만 뽑아서 출력하고 싶을 때, 아래와 같이 map()을 이용하면 File객체에서 파일의 이름(String)만 간단히 뽑아낼 수 있다.
+  ```java
+  Stream<File> fileStream = Stream.of(new File("Ex1.java"), new File("Ex1.txt"), new File("Ex2.java"));
+  //map()으로 Stream<File>을 Stream<String>으로 변환
+  Stream<String> fileNameStream = fileStream.map(File::getName);
+  fileNameStream.forEach(System.out:print);
+  ```
+  - **flatMap():** 스트림의 요소가 배열이거나 map()의 연산결과가 배열인 경우, 즉 스트림의 타입이 Stream<T[]>인 경우, Stream<T>로 다루는 것이 더 편리할 때가 있다. 그럴 때는 map()대신 flatMap()을 사용하면 된다.**(Stream<T[]> -> Stream<T>로 변환)**
+  ```java
+  Stream<String[]> strStream = Stream.of(
+                                  new String[] {"a", "b", "c"}),
+                                  new String[] {"d", "e", "f"});
+  ```
+  위와 같이 요소가 문자열 배열(String[])인 스트림을 각 요소의 문자열들을 합쳐서 문자열이 요소인 스트림, 즉 Stream<String>으로 만들어보자. 일단 위에서 배운 map()를 이용한다면
+  ```java
+  Stream<Stream<String>> strStrStream = strArrStream.map(Arrays::stream);
+  ```
+  예상한 것과 달리, Stream<String>이 아닌 Stream<Stream<String>>으로 변환 되었다. 각 요소의 문자열들이 합쳐지지 않고, 스트림의 스트림 형태로 되어버렸다. 이 때, 간단히 map()을 아래와 같이 flatMap()으로 바꾸기만 하면 우리가 원하는 결과를 얻을 수 있다.
+  ```java
+  Stream<String> strStream = strArrStream.flatMap(Arrays:stream);
+  ```
+  즉, **flatMap()은 map()과 달리 스트림의 스트림이 아닌 스트림으로 만들어 준다.**
+- **최종연산:** 스트림의 요소를 소모해서 결과를 만들어낸다. 따라서 최종 연산후에는 스트림이 닫히게 되고 더 이상 사용할 수 없다.
+  - **reduce():** 스트림의 요소를 줄여나가면서 연산을 수행하고 최종결과를 반환한다. 처음 두 요소를 가지고 연산한 결과를 가지고 그 다음 요소와 연산한다. 이 과정에서 스트림의 요소를 하나씩 소모하게 되며, 스트림의 모든 요소를 소모하게 되면 그 결과를 반환한다.
+  ```java
+  Optional<T> reduce(BinaryOperator<T> accumulator);
+  ```
+  ```java
+  List<Integer> intList = new ArrayList<>();
+  intList.add(1);
+  intList.add(12);
+  intList.add(15);
+  intList.add(7);
+  intList.add(8);
+  intList.add(9);
+  intList.add(10);
+  Stream<Integer> intStream = intList.stream();
+  System.out.println(intStream.reduce(Integer::max)
+                                .get()
+                                .toString());
+  ```
+  이 외에도 연산결과의 초기값을 갖는 reduce()도 있는데, 이 메서드들은 초기값과 스트림의 첫 번째 요소로 연산을 시작한다. 이 부분은 여기서 다루지않겠다. api를 확인해보자.
+  - **collect():** 스트림의 요소를 수집하는 최종 연산으로 앞서 나온 reduce()와 유사하다. collect()가 스트림의 요소를 수집하려면, 어떻게 수집할 것인가에 대한 방법이 정의되어 있어야 하는데, 이방법을 정의한 것이 바로 컬렉터(collector)이다. 컬렉터는 Collector인터페이스를 구현한 것으로, 직접 구현할 수도 있고 미리 작성된 것을 사용할 수도 있다. Collectors클래스는 미리작성된 다양한 종류의 컬렉터를 반환하는 static메서드를 가지고 있다.
+  ```
+  collect() : 스트림의 최종연산, 매개변수로 컬렉터를 필요로 한다.
+  Collector : 인터페이스, 컬렉터는 이 인터페이스를 구현해야한다.
+  Collectors : 클래스, static메서드로 미리 작성된 컬렉터를 제공한다.
+  ```
+  collect()는 매개변수의 타입이 Collector인데, 매개변수가 Collector를 구현한 클래스의 객체이어야 한다는 뜻이다. 이 객체에 구현된 방법대로 스트림의 요소를 수집한다.
+  ```java
+  Object collect(Collector collector);
+  ```
+  - **스트림을 컬렉션과 배열로 변환**
+  ```java
+  //Student 클래스가 정의, 스트림이 생성되어있다고 가정하자.
+  List<String> names = studentStream.map(Student:getName)
+                                    .collect(Collector.toList());
+  ArrayList<String> list = names.stream()
+                                .collect(Collector.toCollection(ArrayList:new));
+  ```
+이외에도 스트림을 컨트롤 할 수 있는 많은 메서드들이 있다. 여기서 소개하기는 너무 많으니 개념을 익힌 후 api를 확인해보자.
