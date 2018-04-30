@@ -24,7 +24,7 @@ Content
 
 ```java
 int[] arr = new int[5];
-Arrays.setAll(arr, i -> (int)Math.random() * 5) + 1;
+Arrays.setAll(arr, i -> (int)Math.random() * 5) + 1);
 ```
 
 위의 람다식은 다음 메서드와 같다.
