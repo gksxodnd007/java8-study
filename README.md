@@ -96,13 +96,13 @@ int a -> a * a //error
 }
 //변경 후
 (String name, int age) ->
-  System.out.println("name: " + name ", age:" + age);
+  System.out.println("name: " + name ", age:" + age)
 ```
 
 괄호{}안의 문장이 return문일 경우 괄호{}를 생략할 수 없다.
 
 ```java
-(int a, int b) -> { return a > b ? a : b;} //ok
+(int a, int b) -> { return a > b ? a : b; } //ok
 (int a, int b) -> return a > ? a : b //error
 ```
 
@@ -115,7 +115,7 @@ int a -> a * a //error
 new Object() {
   int max(int a, int b) {
     return a > b ? a : b;
-    }
+  }
 }
 ```
 
@@ -135,14 +135,14 @@ public interface Function {
 
 public class lambda {
   Function funtionlambda = (int a, int b) -> return a > b ? a : b;
-  Function functionAnomyObject = new Function() {
+  Function functionAnonyObject = new Function() {
     public int max(int a, int b) {
       return a > b ? a : b;
     }
   }
 
-  function.max(3, 5);
-  functionAnomyObject.max(3, 5);
+  functionlambda.max(3, 5);
+  functionAnonyObject.max(3, 5);
 }
 ```
 
