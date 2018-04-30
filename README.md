@@ -299,7 +299,7 @@ int sum = strStream.parallel()
   ```
   예상한 것과 달리, Stream<String>이 아닌 Stream<Stream<String>>으로 변환 되었다. 각 요소의 문자열들이 합쳐지지 않고, 스트림의 스트림 형태로 되어버렸다. 이 때, 간단히 map()을 아래와 같이 flatMap()으로 바꾸기만 하면 우리가 원하는 결과를 얻을 수 있다.
   ```java
-  Stream<String> strStream = strArrStream.flatMap(Arrays:stream);
+  Stream<String> strStream = strArrStream.flatMap(Arrays::stream);
   ```
   즉, **flatMap()은 map()과 달리 스트림의 스트림이 아닌 스트림으로 만들어 준다.**
 - **최종연산:** 스트림의 요소를 소모해서 결과를 만들어낸다. 따라서 최종 연산후에는 스트림이 닫히게 되고 더 이상 사용할 수 없다.
@@ -318,8 +318,8 @@ int sum = strStream.parallel()
   intList.add(10);
   Stream<Integer> intStream = intList.stream();
   System.out.println(intStream.reduce(Integer::max)
-                                .get()
-                                .toString());
+                              .get()
+                              .toString());
   ```
   이 외에도 연산결과의 초기값을 갖는 reduce()도 있는데, 이 메서드들은 초기값과 스트림의 첫 번째 요소로 연산을 시작한다. 이 부분은 여기서 다루지않겠다. api를 확인해보자.
   - **collect():** 스트림의 요소를 수집하는 최종 연산으로 앞서 나온 reduce()와 유사하다. collect()가 스트림의 요소를 수집하려면, 어떻게 수집할 것인가에 대한 방법이 정의되어 있어야 하는데, 이방법을 정의한 것이 바로 컬렉터(collector)이다. 컬렉터는 Collector인터페이스를 구현한 것으로, 직접 구현할 수도 있고 미리 작성된 것을 사용할 수도 있다. Collectors클래스는 미리작성된 다양한 종류의 컬렉터를 반환하는 static메서드를 가지고 있다.
@@ -335,9 +335,9 @@ int sum = strStream.parallel()
   - **스트림을 컬렉션과 배열로 변환**
   ```java
   //Student 클래스가 정의, 스트림이 생성되어있다고 가정하자.
-  List<String> names = studentStream.map(Student:getName)
+  List<String> names = studentStream.map(Student::getName)
                                     .collect(Collector.toList());
   ArrayList<String> list = names.stream()
-                                .collect(Collector.toCollection(ArrayList:new));
+                                .collect(Collector.toCollection(ArrayList::new));
   ```
 이외에도 스트림을 컨트롤 할 수 있는 많은 메서드들이 있다. 여기서 소개하기는 너무 많으니 개념을 익힌 후 api를 확인해보자.
